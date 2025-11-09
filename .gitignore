@@ -2,6 +2,7 @@
 
 # dependencies
 /front/node_modules
+/front/build
 /.pnp
 .pnp.js
 
@@ -27,3 +28,4 @@ yarn-error.log*
 # setting
 .idea
 /src/main/resources/application.properties
+/src/main/resources/templates

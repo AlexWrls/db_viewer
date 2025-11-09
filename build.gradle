@@ -1,11 +1,13 @@
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.6'
-    id 'io.spring.dependency-management' version '1.1.4'
 }
+def springBootVersion = '3.5.6'
+def postgresqlVersion = '42.7.3'
+def lombokVersion = '1.18.40'
 
-group 'org.example'
-version '1.0-SNAPSHOT'
+group 'org.db.viewer'
+version '0.0.1'
 
 java {
     sourceCompatibility = '21'
@@ -15,22 +17,83 @@ repositories {
     mavenCentral()
 }
 
+bootRun {
+    args = [
+            "--spring.config.location=classpath:application.properties"
+    ]
+}
+
+bootJar {
+    archiveFileName = 'db_viewer.jar'
+    mainClass = 'ru.app.Main'
+}
+
+task buildReact(type: Exec) {
+    workingDir "$projectDir/front"
+    inputs.file "$projectDir/front/package.json"
+    outputs.dir "$projectDir/front/build"
+
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'npm.cmd', 'run', 'build'
+    } else {
+        commandLine 'npm', 'run', 'build'
+    }
+}
+
+task copyFrontend(type: Copy) {
+    // Очистка старых файлов
+    doFirst {
+        delete fileTree("$projectDir/src/main/resources/static") {
+            exclude '.gitkeep'
+        }
+        delete fileTree("$projectDir/src/main/resources/templates") {
+            exclude '.gitkeep'
+        }
+    }
+
+    // Копирование статических файлов
+    from("$projectDir/front/build/static") {
+        into "templates/static"
+    }
+    from("$projectDir/front/build/index.html") {
+        into "templates"
+    }
+    into "$projectDir/src/main/resources"
+    outputs.upToDateWhen { false }
+}
+
+processResources {
+    dependsOn copyFrontend
+}
+
+task buildProject {
+    dependsOn = [buildReact, copyFrontend, bootJar]
+    copyFrontend.mustRunAfter buildReact
+    bootJar.mustRunAfter copyFrontend
+
+    group = 'build'
+    description = 'Build all project'
+}
+
 test {
     useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
-    implementation 'org.postgresql:postgresql'
+    implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
+    implementation "org.postgresql:postgresql:$postgresqlVersion"
 
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+    annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
-//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testCompileOnly 'org.projectlombok:lombok:1.18.30'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
+    testImplementation 'org.junit.platform:junit-platform-suite:1.9.2'
+    testImplementation 'org.mockito:mockito-core:5.3.1'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.3.1'
+
 }
 
