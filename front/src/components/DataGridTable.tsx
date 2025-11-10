@@ -37,7 +37,8 @@ const DataGridTable: React.FC<ChildProps> = (data: ChildProps) => {
         title: i.columnName,
         dataIndex: i.columnName,
         key: i.columnName,
-        ellipsis: true,
+        sorter: (a, b) => a.key.valueOf() - b.key.valueOf(),
+        defaultSortOrder: 'descend',
     }));
 
     const dataSource: TableRow[] = data.state.table.rows.map((row, index) => {
@@ -91,8 +92,10 @@ const DataGridTable: React.FC<ChildProps> = (data: ChildProps) => {
                 scroll={{ y: 'calc(100vh - 320px)' }}
                 pagination={{
                     pageSize: 20,
-                    pageSizeOptions: ['20'],
                     showSizeChanger: false,
+                    showQuickJumper: true,
+                    showTotal: (total, range) =>
+                        `Записи ${range[0]}-${range[1]} из ${total}`
                 }}
                 loading={false}
                 rowSelection={{

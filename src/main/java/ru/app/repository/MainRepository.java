@@ -3,6 +3,7 @@ package ru.app.repository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.app.config.DbSource;
+import ru.app.dao.SqlQueryLoader;
 import ru.app.entity.TableData;
 import ru.app.entity.TableHeader;
 
@@ -17,8 +18,14 @@ import java.util.Objects;
 @Transactional
 public class MainRepository {
 
+    private final SqlQueryLoader sqlQueryLoader;
+
     private static final String YES = "YES";
     private static final int ROWS_LIMIT = 500;
+
+    public MainRepository(SqlQueryLoader sqlQueryLoader) {
+        this.sqlQueryLoader = sqlQueryLoader;
+    }
 
     /**
      * Получает список названий всех таблиц в указанной схеме.
@@ -26,9 +33,8 @@ public class MainRepository {
      * @param source источник БД
      * @return Список наименований таблиц в схеме источника (List<String>)
      */
-    public List<String> getAllTableNames(DbSource source) {
-        String sql = "SELECT table_name FROM information_schema.tables " +
-                "WHERE table_schema = :schema AND table_type = 'BASE TABLE'";
+    public List<String> findAllTableName(DbSource source) {
+        String sql = sqlQueryLoader.getQuery("find_all_table_name.sql");
         Map<String, Object> params = Map.of("schema", source.getSchemaName());
         return source.getTemplate().queryForList(sql, params, String.class);
     }
@@ -41,11 +47,8 @@ public class MainRepository {
      * @param where     дополнительное условие для поиска
      * @return заголовки и данне таблцы
      */
-    public TableData getTableColumns(DbSource source, String tableName, String where) {
-        String headerInfoSql = "SELECT column_name, is_nullable , data_type, character_maximum_length " +
-                "FROM information_schema.columns " +
-                "WHERE table_schema = :schema AND table_name = :table " +
-                "ORDER BY ordinal_position";
+    public TableData findTableRows(DbSource source, String tableName, String where) {
+        String headerInfoSql = sqlQueryLoader.getQuery("find_table_header_info.sql");
 
         Map<String, Object> params = Map.of(
                 "schema", source.getSchemaName(),
@@ -53,8 +56,8 @@ public class MainRepository {
 
         List<TableHeader> headers = source.getTemplate().query(headerInfoSql, params, this::mapTableHeadersRow);
 
-        where = Objects.nonNull(where) && !where.isEmpty() ? " where " + where : "";
-        String dataTableSql = String.format("SELECT * from %s.%s%s limit %s", source.getSchemaName(), tableName, where, ROWS_LIMIT);
+        where = Objects.nonNull(where) && !where.isEmpty() ? " WHERE " + where : "";
+        String dataTableSql = String.format("SELECT * FROM %s.%s%s LIMIT %s", source.getSchemaName(), tableName, where, ROWS_LIMIT);
 
         List<List<String>> rows = source.getTemplate().query(dataTableSql, Map.of("table", tableName), (rs, row) -> {
             List<String> item = new ArrayList<>();

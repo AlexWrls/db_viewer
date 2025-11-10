@@ -28,7 +28,7 @@ const TableView = () => {
     })
 
     const getTableData = (rq: ITableDataRq) => {
-        apiService.getTableData(rq).then(rs => {
+        apiService.findTableRows(rq).then(rs => {
             if (rs.data.errorMessage) {
                 setState(prev => ({
                     ...prev,
@@ -49,7 +49,7 @@ const TableView = () => {
     }
 
     const changeTemplate = (rq: ITableDataRq) => {
-        apiService.getTableList(rq).then(rs => {
+        apiService.findAllTableName(rq).then(rs => {
             if (rs.data.errorMessage) {
                 setState(prev => ({
                     ...prev,
@@ -70,7 +70,7 @@ const TableView = () => {
     }
 
     useEffect(() => {
-        apiService.getTableList(state.rq).then(rs => {
+        apiService.findAllTableName(state.rq).then(rs => {
             console.log(`rs=${JSON.stringify(rs.data,null,2)}`)
             if (rs.data.errorMessage) {
                 setState(prev => ({

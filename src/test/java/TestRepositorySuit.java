@@ -3,7 +3,7 @@ import org.junit.platform.suite.api.SelectPackages;
 import org.junit.platform.suite.api.Suite;
 
 @Suite
-@SelectPackages("repository")
+@SelectPackages("example")
 @IncludeClassNamePatterns(".*Test")
 public class TestRepositorySuit {
 

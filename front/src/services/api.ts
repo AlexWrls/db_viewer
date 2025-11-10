@@ -1,8 +1,9 @@
 import axios, {AxiosResponse} from 'axios';
 import {ITableDataRq,Response} from "../models/typings";
 
-
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = process.env.NODE_ENV === 'production'
+    ? process.env.REACT_APP_API_URL || 'https://db.viewer.com'
+    : 'http://localhost:8080';
 
 const api = axios.create({
     baseURL: API_BASE_URL,
@@ -16,11 +17,11 @@ const api = axios.create({
 });
 
 export const apiService = {
-    getTableList: (rq: ITableDataRq): Promise<AxiosResponse<Response>> => {
-       return api.post<Response>("/get_table_list", rq)
+    findAllTableName: (rq: ITableDataRq): Promise<AxiosResponse<Response>> => {
+       return api.post<Response>("/api/find_all_table_name", rq)
     },
 
-    getTableData: (rq: ITableDataRq): Promise<AxiosResponse<Response>> => {
-        return api.post<Response>('/get_table_data', rq);
+    findTableRows: (rq: ITableDataRq): Promise<AxiosResponse<Response>> => {
+        return api.post<Response>("/api/find_table_rows", rq);
     },
 }

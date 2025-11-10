@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 
-
 @RestController
 @SpringBootApplication
 public class Main {

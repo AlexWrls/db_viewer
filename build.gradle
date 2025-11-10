@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.6'
 }
 def springBootVersion = '3.5.6'
+def springdocVersion = '2.8.6'
 def postgresqlVersion = '42.7.3'
 def lombokVersion = '1.18.40'
 
@@ -29,6 +30,9 @@ bootJar {
 }
 
 task buildReact(type: Exec) {
+    delete fileTree("$projectDir/front/build") {
+        exclude '.gitkeep'
+    }
     workingDir "$projectDir/front"
     inputs.file "$projectDir/front/package.json"
     outputs.dir "$projectDir/front/build"
@@ -67,7 +71,8 @@ processResources {
 }
 
 task buildProject {
-    dependsOn = [buildReact, copyFrontend, bootJar]
+    dependsOn = [clean, buildReact, copyFrontend, bootJar]
+    buildReact.mustRunAfter clean
     copyFrontend.mustRunAfter buildReact
     bootJar.mustRunAfter copyFrontend
 
@@ -86,6 +91,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web:$springBootVersion"
     implementation "org.springframework.boot:spring-boot-starter-jdbc:$springBootVersion"
     implementation "org.postgresql:postgresql:$postgresqlVersion"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocVersion"
 
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
