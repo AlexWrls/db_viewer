@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.5.6'
 }
+
 def springBootVersion = '3.5.6'
 def springdocVersion = '2.8.6'
 def postgresqlVersion = '42.7.3'
@@ -30,9 +31,6 @@ bootJar {
 }
 
 task buildReact(type: Exec) {
-    delete fileTree("$projectDir/front/build") {
-        exclude '.gitkeep'
-    }
     workingDir "$projectDir/front"
     inputs.file "$projectDir/front/package.json"
     outputs.dir "$projectDir/front/build"
@@ -45,16 +43,6 @@ task buildReact(type: Exec) {
 }
 
 task copyFrontend(type: Copy) {
-    // Очистка старых файлов
-    doFirst {
-        delete fileTree("$projectDir/src/main/resources/static") {
-            exclude '.gitkeep'
-        }
-        delete fileTree("$projectDir/src/main/resources/templates") {
-            exclude '.gitkeep'
-        }
-    }
-
     // Копирование статических файлов
     from("$projectDir/front/build/static") {
         into "templates/static"
@@ -66,18 +54,26 @@ task copyFrontend(type: Copy) {
     outputs.upToDateWhen { false }
 }
 
-processResources {
-    dependsOn copyFrontend
+task buildProject {
+    dependsOn = [test, clean, buildReact, copyFrontend, bootJar]
+
+    doFirst {
+        println '=============== BUILD COMPLETE ==============='
+    }
 }
 
-task buildProject {
-    dependsOn = [clean, buildReact, copyFrontend, bootJar]
-    buildReact.mustRunAfter clean
-    copyFrontend.mustRunAfter buildReact
-    bootJar.mustRunAfter copyFrontend
+clean.mustRunAfter test
+buildReact.mustRunAfter clean
+copyFrontend.mustRunAfter buildReact
+bootJar.mustRunAfter copyFrontend
 
-    group = 'build'
-    description = 'Build all project'
+clean {
+    delete fileTree("$projectDir/front/build") {
+        exclude '.gitkeep'
+    }
+    delete fileTree("$projectDir/src/main/resources/templates") {
+        exclude '.gitkeep'
+    }
 }
 
 test {

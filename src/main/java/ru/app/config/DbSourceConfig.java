@@ -8,20 +8,15 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 @Configuration
 public class DbSourceConfig {
-
     @Autowired
     @Qualifier("firstJdbcTemplate")
     private NamedParameterJdbcTemplate firstJdbcTemplate;
-
     @Autowired
     @Qualifier("secondJdbcTemplate")
     private NamedParameterJdbcTemplate secondJdbcTemplate;
-
     @Autowired
     @Qualifier("thirdJdbcTemplate")
     private NamedParameterJdbcTemplate thirdJdbcTemplate;
-
-
     @PostConstruct
     public void init() {
         DbSource.FIRST.setTemplate(firstJdbcTemplate);

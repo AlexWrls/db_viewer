@@ -20,7 +20,6 @@ import java.net.UnknownHostException;
 @Configuration
 @ConditionalOnProperty(name = "app.swagger.enabled", havingValue = "true")
 public class SwaggerConfig {
-
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
@@ -43,7 +42,6 @@ public class SwaggerConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")));
     }
-
     @EventListener(ApplicationReadyEvent.class)
     public void onApplicationEvent(ApplicationReadyEvent event) {
         try {

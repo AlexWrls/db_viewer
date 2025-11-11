@@ -15,13 +15,9 @@ import java.util.List;
 @RequestMapping("/api")
 @Tag(name = "MainControllerApi", description = "Основной rest контроллер взаимодействия между клиентом и сервером БД")
 public interface MainControllerApi {
-
-
     @PostMapping("/find_all_table_name")
     @Operation(summary = "Формирует спискок наимонований таблиц БД")
     TableDataRs<List<String>> findAllTableName(@RequestBody TableDataRq rq);
-
-
     @PostMapping("/find_table_rows")
     @Operation(summary = "Формирует объект таблицы залоговки и ее данные")
     TableDataRs<TableData> findTableRows(@RequestBody TableDataRq rq);

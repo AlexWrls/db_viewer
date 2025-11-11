@@ -11,18 +11,15 @@ import java.util.List;
 @Builder
 @Schema(description = "Объект таблицы с данными")
 public class TableData {
-
     @Schema(
             description = "Название таблицы",
             example = "users",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private final String name;
-
     @Schema(
             description = "Заголовки таблицы (колонки)",
             requiredMode = Schema.RequiredMode.REQUIRED)
     private List<TableHeader> headers;
-
     @Schema(
             description = "Строки данных таблицы",
             example = "[[\"1\", \"John\", \"john@example.com\"], [\"2\", \"Jane\", \"jane@example.com\"]]",

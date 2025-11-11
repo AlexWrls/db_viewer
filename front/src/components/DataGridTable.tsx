@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Table, Card, Button, Alert, Input, Typography, Space } from 'antd';
+import { Table, Card, Button, Alert, Typography, Space } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import type { ColumnsType } from 'antd/es/table';
 import SearchInput from "./SearchInput";

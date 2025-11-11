@@ -18,7 +18,6 @@ public class Main {
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
     }
-
     @GetMapping(value = "/", produces = MediaType.TEXT_HTML_VALUE)
     public ResponseEntity<Resource> index() throws IOException {
         Resource resource = new ClassPathResource("templates/index.html");

@@ -13,38 +13,33 @@ import javax.sql.DataSource;
 @Configuration
 public class JdbcConfig {
 
-//---------------- first ----------------
+   //---------------- first ----------------
     @Bean
     @ConfigurationProperties("first.datasource")
     public DataSourceProperties firstDatasourceProps() {
         return new DataSourceProperties();
     }
-
     @Bean
     @Primary
     public DataSource firstDataSource() {
         return firstDatasourceProps().initializeDataSourceBuilder().build();
     }
-
     @Bean
     @Primary
     public NamedParameterJdbcTemplate firstJdbcTemplate() {
         return new NamedParameterJdbcTemplate(firstDataSource());
     }
 
-
-//---------------- second ----------------
+    //---------------- second ----------------
     @Bean
     @ConfigurationProperties("second.datasource")
     public DataSourceProperties secondDatasourceProps() {
         return new DataSourceProperties();
     }
-
     @Bean
     public DataSource secondDataSource() {
          return secondDatasourceProps().initializeDataSourceBuilder().build();
     }
-
     @Bean
     public NamedParameterJdbcTemplate secondJdbcTemplate() {
         return new NamedParameterJdbcTemplate(secondDataSource());
@@ -56,12 +51,10 @@ public class JdbcConfig {
     public DataSourceProperties thirdDatasourceProps() {
         return new DataSourceProperties();
     }
-
     @Bean
     public DataSource thirdDataSource() {
         return secondDatasourceProps().initializeDataSourceBuilder().build();
     }
-
     @Bean
     public NamedParameterJdbcTemplate thirdJdbcTemplate() {
         return new NamedParameterJdbcTemplate(secondDataSource());

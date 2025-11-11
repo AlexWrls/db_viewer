@@ -11,13 +11,11 @@ import java.util.List;
 @Builder
 @Schema(description = "Универсальный response DTO для операций с данными таблиц")
 public class TableDataRs<T> {
-
     @Schema(
             description = "Текст ошибки, если операция завершилась неудачно",
             example = "Ошибка доступа к таблице: недостаточно прав",
             nullable = true)
     private final String errorMessage;
-
     @Schema(
             description = "Успешный response с данными",
             requiredMode = Schema.RequiredMode.REQUIRED,

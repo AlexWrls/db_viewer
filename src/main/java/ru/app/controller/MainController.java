@@ -14,9 +14,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 public class MainController implements MainControllerApi {
-
     private final MainRepository repository;
-
     @Override
     public TableDataRs<List<String>> findAllTableName(@RequestBody TableDataRq rq) {
         try {
@@ -26,7 +24,6 @@ public class MainController implements MainControllerApi {
             return TableDataRs.<List<String>>builder().errorMessage(e.getMessage()).build();
         }
     }
-
     @Override
     public TableDataRs<TableData> findTableRows(@RequestBody TableDataRq rq) {
         try {

@@ -5,7 +5,6 @@ import lombok.Setter;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public enum DbSource {
-
     FIRST("first"),
     SECOND("second"),
     THIRD("public");
@@ -14,7 +13,6 @@ public enum DbSource {
     private NamedParameterJdbcTemplate template;
     @Getter
     private final String schemaName;
-
     DbSource(String schemaName) {
         this.schemaName = schemaName;
     }

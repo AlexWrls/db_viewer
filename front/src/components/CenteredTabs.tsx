@@ -24,13 +24,6 @@ const CenteredTabs: React.FC<ChildProps> = (props: ChildProps) => {
         props.onDataChange({tableName: "", template: type ? type : TemplateType.FIRST})
     };
 
-    function a11yProps(index: number) {
-        return {
-            id: `simple-tab-${index}`,
-            'aria-controls': `simple-tabpanel-${index}`,
-        };
-    }
-
     return (
         <Tabs
             type="card"

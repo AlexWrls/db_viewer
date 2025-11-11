@@ -17,12 +17,9 @@ import java.util.Objects;
 @Repository
 @Transactional
 public class MainRepository {
-
     private final SqlQueryLoader sqlQueryLoader;
-
     private static final String YES = "YES";
     private static final int ROWS_LIMIT = 500;
-
     public MainRepository(SqlQueryLoader sqlQueryLoader) {
         this.sqlQueryLoader = sqlQueryLoader;
     }
@@ -73,8 +70,6 @@ public class MainRepository {
                 .rows(rows)
                 .build();
     }
-
-
     private TableHeader mapTableHeadersRow(ResultSet rs, int rowNum) {
         try {
             return TableHeader.builder()

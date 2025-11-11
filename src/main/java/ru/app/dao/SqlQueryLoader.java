@@ -12,9 +12,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -35,12 +35,13 @@ public class SqlQueryLoader {
                 + SQL_RESOURCES + (path.startsWith("/") ? path : "/" + path));
     }
 
-    private final Map<String, String> QUERIES = new HashMap<>();
+    private final Map<String, String> QUERIES = new ConcurrentHashMap<>();
 
     private static final String SQL_RESOURCES = "src/main/resources/sql";
 
     @PostConstruct
     private void loadAllSqlFiles() throws IOException {
+        QUERIES.clear();
         Path basePath = Paths.get(SQL_RESOURCES);
 
         if (!Files.exists(basePath)) {
