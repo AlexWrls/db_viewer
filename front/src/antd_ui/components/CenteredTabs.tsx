@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useState} from "react";
 import {Tabs} from "antd";
-import {ITableDataRq, State, TemplateType} from "../models/typings";
+import {ITableDataRq, State, TemplateType} from "../../models/typings";
 
 
 interface ChildProps {

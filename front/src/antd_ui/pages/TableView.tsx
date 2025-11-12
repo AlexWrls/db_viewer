@@ -1,22 +1,13 @@
 import React, {useEffect, useState} from 'react';
-import {apiService} from "../services/api";
+import {apiService} from "../../services/api";
 import CenteredTabs from "../components/CenteredTabs";
 import {Alert, Card, Col, ConfigProvider, Layout, Row, Spin, Typography} from "antd";
-import {ITableDataRq, State, TemplateType} from "../models/typings";
+import {ITableDataRq, State, TemplateType} from "../../models/typings";
 import DataGridTable from "../components/DataGridTable";
 import DataGridTableMenu from "../components/DataGridTableMenu";
 
 
-const theme = {
-    token: {
-        // Базовая тема
-        // colorPrimary: '#1890ff',
-        // colorSuccess: '#52c41a',
-        // colorWarning: '#faad14',
-        // colorError: '#f5222d',
-        // borderRadius: 6,
-       },
-};
+const theme = { token: {},};
 
 const TableView = () => {
     const [state, setState] = useState<State>({
@@ -113,12 +104,12 @@ const TableView = () => {
 
                 <Layout.Content style={{
                     padding: '8px 0',
-                    height: 'calc(980vh - 64px)', // Используем height вместо maxHeight
-                    overflow: 'hidden' // Убираем скролл у контента
+                    height: 'calc(980vh - 64px)',
+                    overflow: 'hidden'
                 }}>
                     <Row gutter={[16, 16]} style={{
                         height: '100%',
-                        margin: 0 // Убираем отступы у Row
+                        margin: 0
                     }}>
                         {state.error && (
                             <Col span={24}>
@@ -134,7 +125,7 @@ const TableView = () => {
 
                         <Col span={20} style={{
                             height: '100%',
-                            padding: 0 // Убираем отступы у Col
+                            padding: 0
                         }}>
                             {state.loading && (
                                 <div style={{

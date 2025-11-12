@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, Button, Card } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { ITableDataRq, State } from "../models/typings";
+import { ITableDataRq, State } from "../../models/typings";
 
 interface ChildProps {
     state: State;
